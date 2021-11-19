@@ -9,6 +9,7 @@ edition = "2021"
 [dev-dependencies]
 tempfile = "3.2.0"
 assert_cmd = "2.0.2"
+predicates = "2.0.3"
 
 [dependencies]
 argh = "0.1.6"

@@ -22,7 +22,6 @@ pub struct Args {
     pub path_only: bool,
 }
 
-
 impl Args {
     pub fn input_file(&self) -> &Path {
         self.file.as_deref().unwrap_or_else(|| Path::new("ese.env"))

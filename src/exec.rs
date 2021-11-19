@@ -1,9 +1,9 @@
+use std::env as std_env;
 use std::os::unix::prelude::ExitStatusExt;
 use std::process::ExitStatus;
 use std::{fmt::Display, process::Command};
-use std::env as std_env;
 
-use anyhow::{Context, Result, bail};
+use anyhow::{bail, Context, Result};
 
 use crate::{cli::Args, env};
 
@@ -26,7 +26,7 @@ pub fn exec_with_env(data: Args) -> Result<TerminationStatus> {
     // Early assign in order to make the Command not be dropped too early
     let mut command = Command::new(program);
     let mut command = command.args(commands.iter().skip(1));
-    
+
     // Read the values from the .env file
     let key_values = env::read_from_dotenv(input_path)?;
 
@@ -36,7 +36,7 @@ pub fn exec_with_env(data: Args) -> Result<TerminationStatus> {
             //
             // The child must either get no envs from the parent or get only the PATH
             bail!("--clear contradicts with --path-only");
-        },
+        }
         (false, false) => command, // Child will inherit all env vars from the parent
         (true, false) => command.env_clear(),
         (false, true) => {
@@ -56,7 +56,6 @@ pub fn exec_with_env(data: Args) -> Result<TerminationStatus> {
     Ok(exit_status.into())
 }
 
-
 /// Represents the termination status of a command
 pub enum TerminationStatus {
     /// If the given command was interrupted through a signal, this variant holds the value of that signal
@@ -64,7 +63,6 @@ pub enum TerminationStatus {
     /// If the command terminated normally (i.e. not signal interrupted), this variant holds the exit code of the command
     TerminatedNormally(i32),
 }
-
 
 impl TerminationStatus {
     /// Returns true if the command terminated normally and with exit code 0
@@ -81,7 +79,6 @@ impl TerminationStatus {
     }
 }
 
-
 impl Display for TerminationStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -96,7 +93,6 @@ impl Display for TerminationStatus {
         }
     }
 }
-
 
 impl From<ExitStatus> for TerminationStatus {
     fn from(exit_status: ExitStatus) -> Self {
