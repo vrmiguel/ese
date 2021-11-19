@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use argh::FromArgs;
 
 #[derive(FromArgs, PartialEq, Debug)]
-/// A very lightweight environment variable manager
+/// A lightweight dotenv-reading command runner
 pub struct Args {
     #[argh(positional)]
     /// the command to be executed.
